@@ -12,8 +12,8 @@ bl_info = {
 
 
 import bpy
-from bpy.types import Operator
-from bpy.props import FloatVectorProperty
+from bpy.types import Operator, PropertyGroup
+from bpy.props import BoolProperty, PointerProperty
 from bpy_extras.object_utils import AddObjectHelper, object_data_add
 from mathutils import Vector
 
@@ -37,6 +37,14 @@ from mathutils import Vector
 #     )
 #     return url_manual_prefix, url_manual_mapping
 
+class VSEMaskSettings(PropertyGroup):
+
+    vse_sync : BoolProperty(
+        name="Sync VSE",
+        description="Keep Render Layer in sync with VSE frames",
+        default = False
+        )
+
 class VSEMASK_PT_panel_1(bpy.types.Panel):
     bl_label = "VSE Masking"
     bl_category = "VSE Masking"
@@ -46,14 +54,20 @@ class VSEMASK_PT_panel_1(bpy.types.Panel):
 
     def draw(self, context):
         layout = self.layout
-        layout.label(text="This is panel 1.")
+        scene = context.scene
+        vse_mask = scene.vse_mask
+
+        layout.prop(vse_mask, "vse_sync", text="Sync VSE")
 
 
 def register():
     bpy.utils.register_class(VSEMASK_PT_panel_1)
+    bpy.utils.register_class(VSEMaskSettings)
+    bpy.types.Scene.vse_mask = PointerProperty(type=VSEMaskSettings)
 
 def unregister():
     bpy.utils.unregister_class(VSEMASK_PT_panel_1)
+    del bpy.types.Scene.vse_sync
 
 if __name__ == "__main__":
     register()
