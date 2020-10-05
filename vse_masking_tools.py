@@ -37,12 +37,28 @@ from mathutils import Vector
 #     )
 #     return url_manual_prefix, url_manual_mapping
 
+
+def vse_opengl_render_handler(dummy):
+    bpy.ops.render.opengl(animation=False, render_keyed_only=False, sequencer=True)
+
+
+def vse_sync_changed_func(self, context):
+
+    if context.scene.vse_mask.vse_sync:
+        if not vse_opengl_render_handler in bpy.app.handlers.frame_change_post:
+            bpy.app.handlers.frame_change_post.append(vse_opengl_render_handler)
+    else:
+        if vse_opengl_render_handler in bpy.app.handlers.frame_change_post:
+            bpy.app.handlers.frame_change_post.remove(vse_opengl_render_handler)
+
+
 class VSEMaskSettings(PropertyGroup):
 
     vse_sync : BoolProperty(
         name="Sync VSE",
         description="Keep Render Layer in sync with VSE frames",
-        default = False
+        default = False,
+        update = vse_sync_changed_func
         )
 
 class VSEMASK_PT_panel_1(bpy.types.Panel):
