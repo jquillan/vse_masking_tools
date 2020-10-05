@@ -85,5 +85,3 @@ def unregister():
     bpy.utils.unregister_class(VSEMASK_PT_panel_1)
     del bpy.types.Scene.vse_sync
 
-if __name__ == "__main__":
-    register()
