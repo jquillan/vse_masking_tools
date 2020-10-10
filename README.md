@@ -13,3 +13,11 @@ mask to be used in the VSE. It automatically updates the rendered
 results on frame change so you always have the current frame to tweek
 the mask on with out manually rendering.
 
+## Usage
+
+ * Bring up Image Editor
+ * Show **Render Results**
+ * In the VSE Masking tab check **Sync VSE**
+
+Now you can advance frames and the image editor with show the current
+frame of the VSE rendered in the Image Editor
