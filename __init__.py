@@ -3,11 +3,11 @@ bl_info = {
     "author": "John C. Quillan",
     "version": (0, 1),
     "blender": (3, 4, 0),
-    "location": "Image Editor",
+    "location": "Image/Mask Editor Sidebar",
     "description": "Syncs VSE to Image Editor render",
     "warning": "",
     "doc_url": "https://github.com/jquillan/vse_masking_tools",
-    "category": "VSE Masking",
+    "category": "Image Editor",
 }
 
 
@@ -47,6 +47,24 @@ def vse_sync_changed_func(self, context):
     if context.scene.vse_mask.vse_sync:
         if not vse_opengl_render_handler in bpy.app.handlers.frame_change_post:
             bpy.app.handlers.frame_change_post.append(vse_opengl_render_handler)
+            render_result = next(image for image in bpy.data.images if image.type == "RENDER_RESULT")
+            print(render_result.name)
+
+            # Get the current active area
+            area = bpy.context.area
+
+            # Check if the current area is an Image Editor
+            if area.type == 'IMAGE_EDITOR':
+                # Get the space_data of the Image Editor
+                space_data = area.spaces.active
+                
+                # Find the image data block by name
+                image = bpy.data.images.get(render_result.name)
+
+                if image:
+                    # Set the selected image data block
+                    space_data.image = image
+                    space_data.ui_mode = 'MASK'
     else:
         if vse_opengl_render_handler in bpy.app.handlers.frame_change_post:
             bpy.app.handlers.frame_change_post.remove(vse_opengl_render_handler)
