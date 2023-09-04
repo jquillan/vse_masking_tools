@@ -2,11 +2,11 @@ bl_info = {
     "name": "VSE Masking Tools",
     "author": "John C. Quillan",
     "version": (0, 1),
-    "blender": (2, 80, 0),
-    "location": "FIXME",
-    "description": "Syncs VSE to Images editor redner",
+    "blender": (3, 4, 0),
+    "location": "Image Editor",
+    "description": "Syncs VSE to Image Editor render",
     "warning": "",
-    "doc_url": "",
+    "doc_url": "https://github.com/jquillan/vse_masking_tools",
     "category": "VSE Masking",
 }
 
@@ -85,3 +85,6 @@ def unregister():
     bpy.utils.unregister_class(VSEMASK_PT_panel_1)
     del bpy.types.Scene.vse_sync
 
+
+if __name__ == "__main__":
+    register()
