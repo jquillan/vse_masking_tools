@@ -3,7 +3,7 @@ bl_info = {
     "author": "John C. Quillan, tintwotin",
     "version": (0, 2),
     "blender": (3, 4, 0),
-    "location": "Image/Mask Editor Sidebar > Background Display > View",
+    "location": "Image/Mask Editor Sidebar > View > Background Display",
     "description": "Syncs VSE to Image Editor render",
     "warning": "",
     "doc_url": "https://github.com/jquillan/vse_masking_tools",
