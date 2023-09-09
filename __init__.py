@@ -1,9 +1,9 @@
 bl_info = {
     "name": "VSE Masking Tools",
-    "author": "John C. Quillan",
-    "version": (0, 1),
+    "author": "John C. Quillan, tintwotin",
+    "version": (0, 2),
     "blender": (3, 4, 0),
-    "location": "Image/Mask Editor Sidebar",
+    "location": "Image/Mask Editor Sidebar > Background Display > View",
     "description": "Syncs VSE to Image Editor render",
     "warning": "",
     "doc_url": "https://github.com/jquillan/vse_masking_tools",
@@ -27,8 +27,6 @@ from mathutils import Vector
 #         icon='PLUGIN')
 
 
-
-
 # This allows you to right click on a button and link to documentation
 # def add_object_manual_map():
 #     url_manual_prefix = "https://docs.blender.org/manual/en/latest/"
@@ -48,7 +46,7 @@ def vse_sync_changed_func(self, context):
         if not vse_opengl_render_handler in bpy.app.handlers.frame_change_post:
             bpy.app.handlers.frame_change_post.append(vse_opengl_render_handler)
             render_result = next(image for image in bpy.data.images if image.type == "RENDER_RESULT")
-            print(render_result.name)
+            #print(render_result.name)
 
             # Get the current active area
             area = bpy.context.area
@@ -70,37 +68,40 @@ def vse_sync_changed_func(self, context):
             bpy.app.handlers.frame_change_post.remove(vse_opengl_render_handler)
 
 
-class VSEMaskSettings(PropertyGroup):
+class VSEMASK_settings(PropertyGroup):
 
     vse_sync : BoolProperty(
         name="Sync VSE",
-        description="Keep Render Layer in sync with VSE frames",
+        description="Keep Render Layer in sync with Sequencer Preview",
         default = False,
         update = vse_sync_changed_func
         )
 
-class VSEMASK_PT_panel_1(bpy.types.Panel):
-    bl_label = "VSE Masking"
-    bl_category = "VSE Masking"
+class VSEMASK_PT_panel(bpy.types.Panel):
+    bl_label = "Background Display"
+    bl_category = "View"
     bl_space_type = "IMAGE_EDITOR"
     bl_region_type = "UI"
     bl_options = {"DEFAULT_CLOSED"}
 
     def draw(self, context):
         layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+        layout = layout.row(heading="Preview")
         scene = context.scene
         vse_mask = scene.vse_mask
 
-        layout.prop(vse_mask, "vse_sync", text="Sync VSE")
+        layout.prop(vse_mask, "vse_sync", text=" Sequencer")
 
 
 def register():
-    bpy.utils.register_class(VSEMASK_PT_panel_1)
-    bpy.utils.register_class(VSEMaskSettings)
-    bpy.types.Scene.vse_mask = PointerProperty(type=VSEMaskSettings)
+    bpy.utils.register_class(VSEMASK_PT_panel)
+    bpy.utils.register_class(VSEMASK_settings)
+    bpy.types.Scene.vse_mask = PointerProperty(type=VSEMASK_settings)
 
 def unregister():
-    bpy.utils.unregister_class(VSEMASK_PT_panel_1)
+    bpy.utils.unregister_class(VSEMASK_PT_panel)
     del bpy.types.Scene.vse_sync
 
 
